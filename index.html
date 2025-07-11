@@ -7,11 +7,84 @@
 <body>
   <h1>Sebuah halaman HTML</h1>
   <h2>berisi catatan-catatan pengembangan web</h2>
+
+  <p>----</p>
+  
   <h3>Mengubah string ke array</h3>
   <p>Jika punya string yang sudah kelihatan banget seperti array, seperti <code>"lele, tongkol"</code>, maka cara untuk mengubahnya menjadi array adalah sebagai berikut.</p>
   <code>
     const arrayIkan = "lele, tongkol".split(",").map(s => s.trim());
   </code>
 
+  <p>----</p>
+  
+  <h3>Contoh Dependency Injection dengan Typescript</h3>
+  <p>Ini dikasih tau Google Gemini, btw.</p>
+  <code>
+    // --- Abstraction: IRepository ---
+    interface IRepository {
+        save(data: string): void;
+    }
+    
+    // --- Low-level module: DatabaseRepository (implements abstraction) ---
+    class DatabaseRepository implements IRepository {
+        save(data: string): void {
+            console.log(`Saving "${data}" to the database.`);
+            // Simulate database save operation
+        }
+    }
+    
+    // --- Low-level module: FileRepository (implements abstraction) ---
+    class FileRepository implements IRepository {
+        save(data: string): void {
+            console.log(`Saving "${data}" to a file: "${data}.txt".`);
+            // Simulate file save operation
+        }
+    }
+    
+    // --- High-level module: UserService (depends on abstraction) ---
+    class UserService {
+        private repository: IRepository; // Depends on the IRepository abstraction
+    
+        // Constructor now expects an IRepository
+        constructor(repository: IRepository) {
+            this.repository = repository;
+        }
+    
+        createUser(username: string): void {
+            console.log(`Creating user: ${username}`);
+            this.repository.save(username);
+        }
+    }
+    
+    // --- Usage (showing how to achieve DIP through DI) ---
+    
+    // Option 1: Using DatabaseRepository
+    console.log("--- Using DatabaseRepository ---");
+    const databaseRepo = new DatabaseRepository();
+    const userServiceWithDb = new UserService(databaseRepo); // Dependency Injected
+    userServiceWithDb.createUser("Bob");
+    
+    // Option 2: Using FileRepository
+    console.log("\n--- Using FileRepository ---");
+    const fileRepo = new FileRepository();
+    const userServiceWithFile = new UserService(fileRepo); // Dependency Injected
+    userServiceWithFile.createUser("Charlie");
+    
+    /*
+    Output:
+    --- Using DatabaseRepository ---
+    Creating user: Bob
+    Saving "Bob" to the database.
+    
+    --- Using FileRepository ---
+    Creating user: Charlie
+    Saving "Charlie" to a file: "Charlie.txt".
+    */
+  </code>
+  <p>Saya berencana mendokumentasikan jawaban-jawaban dari AI di sini. Supaya lebih mudah mencarinya nanti.</p>
+
+  <p>----</p>
+  
 </body>
 </html>
